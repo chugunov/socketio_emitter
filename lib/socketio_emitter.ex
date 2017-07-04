@@ -75,10 +75,8 @@ defmodule SocketIOEmitter do
   end
 
   defp override_config(redis_opts) do
-    IO.inspect(config())
     new_config = Keyword.merge(config(), redis_opts)
     Application.put_env(:socketio_emitter, :redix_pool, new_config)
-    IO.inspect(config())
   end
 
   defp config() do
