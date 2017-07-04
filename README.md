@@ -27,7 +27,7 @@ defmodule ExampleApp do
       supervisor(SocketIOEmitter, []),
     ]
 
-    opts = [strategy: :one_for_one, name: Osame.Supervisor]
+    opts = [strategy: :one_for_one, name: ExampleApp.Supervisor]
     Supervisor.start_link(children, opts)
   end
 end
@@ -54,7 +54,7 @@ Or passing by parameters directly to supervisor:
 ```elixir
 children = [
   # Add this line to your supervisor tree
-  supervisor(SocketIOEmitter, [host: "example.com", port: 9999, password: "secret"], [name: :socket_emitter]),
+  supervisor(SocketIOEmitter, [host: "example.com", port: 9999, password: "secret"], [name: :socket_emitter])
 ]
 ```
 
