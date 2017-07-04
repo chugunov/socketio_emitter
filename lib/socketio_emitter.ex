@@ -10,7 +10,6 @@ defmodule SocketIOEmitter do
   @uid "emitter"
   @parser_event_type 2
   @default_redix_config [pool_size: 1]
-  @redix_conf Application.get_env(:socketio_emitter, :redix_config, @default_redix_config)
 
   def start_link(redis_opts \\ [])
   def start_link(redis_opts) do
@@ -19,7 +18,7 @@ defmodule SocketIOEmitter do
   
   def init(redis_opts) do
     redix_workers = 
-      for i <- 0..(@redix_conf[:pool_size] - 1) do
+      for i <- 0..(redix_config(:pool_size) - 1) do
         worker(Redix, [redis_opts, [name: :"redix_#{i}"]], id: {Redix, i})
       end
 
@@ -70,6 +69,15 @@ defmodule SocketIOEmitter do
   end
 
   defp random_index() do
-    "#{rem(System.unique_integer([:positive]), @redix_conf[:pool_size])}"
+    "#{rem(System.unique_integer([:positive]), redix_config(:pool_size))}"
+  end
+
+  defp redix_config() do
+    curr_env_config = Application.get_env(:socketio_emitter, :redix_config, [])
+    Keyword.merge(@default_redix_config, curr_env_config)
+  end
+
+  defp redix_config(key) do
+    redix_config()[key]
   end
 end
