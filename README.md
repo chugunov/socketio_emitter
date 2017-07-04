@@ -12,7 +12,7 @@ by adding `socketio_emitter` to your list of dependencies in `mix.exs`:
 
 ```elixir
 def deps do
-  [{:socketio_emitter, "~> 0.1.1"}]
+  [{:socketio_emitter, "~> 0.1.2"}]
 end
 ```
 
