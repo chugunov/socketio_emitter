@@ -52,7 +52,7 @@ msg = %{:text => "hello"}
   
 # sending to individual socketid (private message)
 {:ok, _consumers_count} =  SocketIOEmitter.emit ["private", msg],
-  rooms: [socket_id"]
+  rooms: [socket_id]
   
 # sending to all clients in 'admin' namespace
 {:ok, _consumers_count} =  SocketIOEmitter.emit ["namespace", msg],
