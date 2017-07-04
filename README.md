@@ -18,6 +18,8 @@ end
 
 ## How to use
 
+Register `socketio_emitter` supervisor at your supervisor tree:
+
 ```elixir
 defmodule ExampleApp do
   use Application
@@ -34,6 +36,32 @@ defmodule ExampleApp do
     Supervisor.start_link(children, opts)
   end
 end
+```
+
+Then call `SocketIOEmitter.emit/2`:
+
+```elixir
+msg = %{:text => "hello"}
+
+# sending to all clients
+{:ok, _consumers_count} =  SocketIOEmitter.emit ["broadcast", msg]
+
+# sending to all clients in 'game' room
+{:ok, _consumers_count} =  SocketIOEmitter.emit ["new-game", msg],
+  rooms: ["game"]
+  
+# sending to individual socketid (private message)
+{:ok, _consumers_count} =  SocketIOEmitter.emit ["private", msg],
+  rooms: [socket_id]
+  
+# sending to all clients in 'admin' namespace
+{:ok, _consumers_count} =  SocketIOEmitter.emit ["namespace", msg],
+  nsp: "/admin"
+  
+# sending to all clients in 'admin' namespace and in 'notifications' room
+{:ok, _consumers_count} =  SocketIOEmitter.emit ["namespace", msg],
+  nsp: "/admin",
+  rooms: ["notifications"]
 ```
 
 ## Configuration
