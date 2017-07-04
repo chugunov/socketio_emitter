@@ -58,11 +58,11 @@ children = [
 ]
 ```
 
-## License
-
 ## TODO
 
 - tests
 - documentation
+
+## License
 
 MIT
