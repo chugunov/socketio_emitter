@@ -9,7 +9,7 @@ defmodule SocketIOEmitter do
   @prefix "socket.io"
   @uid "emitter"
   @parser_event_type 2
-  @default_redix_config [pool_size: 1]
+  @default_redix_config [redix_config: [], pool_size: 1]
 
   def start_link(redis_opts \\ [])
   def start_link(redis_opts) do
@@ -17,9 +17,11 @@ defmodule SocketIOEmitter do
   end
   
   def init(redis_opts) do
+    override_config(redis_opts)
+
     redix_workers = 
-      for i <- 0..(redix_config(:pool_size) - 1) do
-        worker(Redix, [redis_opts, [name: :"redix_#{i}"]], id: {Redix, i})
+      for i <- 0..(config(:pool_size) - 1) do
+        worker(Redix, [config(:redix_config), [name: :"redix_#{i}"]], id: {Redix, i})
       end
 
     opts = [strategy: :one_for_one, name: SocketIOEmitter.Supervisor]
@@ -69,15 +71,22 @@ defmodule SocketIOEmitter do
   end
 
   defp random_index() do
-    "#{rem(System.unique_integer([:positive]), redix_config(:pool_size))}"
+    "#{rem(System.unique_integer([:positive]), config(:pool_size))}"
   end
 
-  defp redix_config() do
-    curr_env_config = Application.get_env(:socketio_emitter, :redix_config, [])
+  defp override_config(redis_opts) do
+    IO.inspect(config())
+    new_config = Keyword.merge(config(), redis_opts)
+    Application.put_env(:socketio_emitter, :redix_pool, new_config)
+    IO.inspect(config())
+  end
+
+  defp config() do
+    curr_env_config = Application.get_env(:socketio_emitter, :redix_pool, [])
     Keyword.merge(@default_redix_config, curr_env_config)
   end
 
-  defp redix_config(key) do
-    redix_config()[key]
+  defp config(key) when is_atom(key) do
+    config()[key]
   end
 end

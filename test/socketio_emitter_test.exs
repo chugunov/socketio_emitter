@@ -3,7 +3,10 @@ defmodule SocketIOEmitterTest do
   doctest SocketIOEmitter
 
   setup_all do
-    assert {:ok, _pid} = SocketIOEmitter.start_link
+    assert {:ok, _pid} = SocketIOEmitter.start_link redix_config: [
+        host: "localhost",
+        port: 6379
+      ], pool_size: 3
     :ok
   end
 

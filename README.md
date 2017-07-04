@@ -12,7 +12,7 @@ by adding `socketio_emitter` to your list of dependencies in `mix.exs`:
 
 ```elixir
 def deps do
-  [{:socketio_emitter, "~> 0.1.0"}]
+  [{:socketio_emitter, "~> 0.1.1"}]
 end
 ```
 
@@ -66,26 +66,33 @@ msg = %{:text => "hello"}
 
 ## Configuration
 
-You can configure `socketio_emitter` from your `config.exs`, ex.:
+You can configure `socketio_emitter` from your `config.exs`. 
+See the [redix documentation](https://hexdocs.pm/redix/Redix.html#start_link/2) for the possible values of `redix_config`.
 
 ```elixir
 use Mix.Config
 
-config :socketio_emitter, :redix_config,
-  # default value: localhost
-  host: "example.com", 
-  # default value: 6379
-  port: 5000,
+config :socketio_emitter, :redix_pool,
+  redix_config: [
+    # default value: localhost
+    host: "example.com",
+    # default value: 6379
+    port: 5000,
+  ],
   # 5 Redix processes will be available (default value: 1)
   pool_size: 5
 ```
-
-Or passing by parameters directly to supervisor:
+Or passing by parameters directly to supervisor, in this way values from config will be **overridden**:
 
 ```elixir
+redix_pool = [redix_config: [
+    host: "localhost",
+    port: 6379
+  ], pool_size: 3]
+
 children = [
   # Add this line to your supervisor tree
-  supervisor(SocketIOEmitter, [host: "example.com", port: 9999, password: "secret"], [name: :socket_emitter])
+  supervisor(SocketIOEmitter, [redix_pool], [name: :socket_emitter])
 ]
 ```
 
