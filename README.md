@@ -3,7 +3,7 @@
 [![Build Status](https://api.travis-ci.org/chugunov/socketio_emitter.svg?branch=master)](https://travis-ci.org/chugunov/socketio_emitter)
 [![Hex.pm](https://img.shields.io/hexpm/v/socketio_emitter.svg)](https://hex.pm/packages/socketio_emitter)
 
-`socketio_emitter` allows you to communicate with socket.io servers easily from Elixir processes.
+`socketio_emitter` allows you to communicate with socket.io servers easily from Elixir processes. Inspired by [socket.io-emitter](https://github.com/socketio/socket.io-emitter)
 
 ## Installation
 
