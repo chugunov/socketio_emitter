@@ -2,11 +2,11 @@ name: Elixir CI
 
 on:
   push:
-    branches:
-      — '*'
-    tags:
-      — '*'
+    branches: [ master ]
   pull_request:
+    branches: [ master ]
+  release:
+    types: [created]
 
 jobs:
   build:
@@ -53,15 +53,24 @@ jobs:
   publish:
   
     needs: build
+    name: Publish to hex.pm
     runs-on: ubuntu-latest
     
-    if: GitHub.ref == 'refs/heads/master' || GitHub.event_name == 'release'
+    if: GitHub.event_name == 'release'
     steps:
       - name: Check out
         uses: actions/checkout@v2
+      - name: Set up Elixir
+        uses: erlef/setup-beam@988e02bfe678367a02564f65ca2e37726dc0268f
+        with:
+          elixir-version: '1.13.1'
+          otp-version: '24.2'
 
-      - name: Publish to Hex.pm
-        uses: erlangpack/github-action@v1
+      - name: Install dependencies
+        run: mix deps.get
+      - name: Build hex package
+        run: mix hex.build
+      - name: Publishing hex package
+        run: mix hex.publish --yes
         env:
           HEX_API_KEY: ${{ secrets.HEX_API_KEY }}
-
