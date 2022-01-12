@@ -4,7 +4,7 @@ defmodule SocketIOEmitter do
   """
 
   use Supervisor
-  
+
   @root_nsp "/"
   @prefix "socket.io"
   @uid "emitter"
@@ -12,20 +12,22 @@ defmodule SocketIOEmitter do
   @default_redix_config [redix_config: [], pool_size: 1]
 
   def start_link(redis_opts \\ [])
+
   def start_link(redis_opts) do
     Supervisor.start_link(__MODULE__, redis_opts, name: __MODULE__)
   end
-  
+
+  @impl true
   def init(redis_opts) do
     override_config(redis_opts)
 
-    redix_workers = 
+    redix_workers =
       for i <- 0..(config(:pool_size) - 1) do
-        worker(Redix, [config(:redix_config), [name: :"redix_#{i}"]], id: {Redix, i})
+        Supervisor.child_spec({Redix, name: :"redix_#{i}"}, id: {Redix, i})
       end
 
     opts = [strategy: :one_for_one, name: SocketIOEmitter.Supervisor]
-    supervise(redix_workers, opts)
+    Supervisor.init(redix_workers, opts)
   end
 
   @doc """
@@ -41,7 +43,7 @@ defmodule SocketIOEmitter do
     flags_ = Enum.reduce(flags, %{}, &Map.put(&2, &1, true))
     opts = %{:rooms => rooms, :flags => flags_}
 
-    channel = 
+    channel =
       case length(rooms) do
         1 -> "#{prefix}##{nsp}##{hd(rooms)}#"
         _ -> "#{prefix}##{nsp}#"
@@ -49,8 +51,8 @@ defmodule SocketIOEmitter do
 
     binary_msg =
       [@uid, packet, opts]
-      |> Msgpax.pack!
-      |> IO.iodata_to_binary
+      |> Msgpax.pack!()
+      |> IO.iodata_to_binary()
 
     {channel, binary_msg}
   end
@@ -61,7 +63,7 @@ defmodule SocketIOEmitter do
   def emit(args, opts \\ []) when is_list(args) do
     {:ok, emit!(args, opts)}
   rescue
-    _error -> 
+    _error ->
       {:error, :wrong_data}
   end
 

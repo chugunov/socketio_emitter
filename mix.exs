@@ -2,15 +2,17 @@ defmodule SocketioEmitter.Mixfile do
   use Mix.Project
 
   def project do
-    [app: :socketio_emitter,
-     version: "0.1.2",
-     elixir: "~> 1.4",
-     description: description(),
-     package: package(),
-     build_embedded: Mix.env == :prod,
-     start_permanent: Mix.env == :prod,
-     deps: deps(),
-     source_url: "https://github.com/chugunov/socketio_emitter"]
+    [
+      app: :socketio_emitter,
+      version: "0.1.2",
+      elixir: "~> 1.13.1",
+      description: description(),
+      package: package(),
+      build_embedded: Mix.env() == :prod,
+      start_permanent: Mix.env() == :prod,
+      deps: deps(),
+      source_url: "https://github.com/chugunov/socketio_emitter"
+    ]
   end
 
   def application do
@@ -27,7 +29,7 @@ defmodule SocketioEmitter.Mixfile do
   defp package do
     [
       name: :socketio_emitter,
-      files: ["lib",  "mix.exs", "README*", "LICENSE*"],
+      files: ["lib", "mix.exs", "README*", "LICENSE*"],
       maintainers: ["Andrey Chugunov"],
       licenses: ["MIT"],
       links: %{"GitHub" => "https://github.com/chugunov/socketio_emitter"}
@@ -35,10 +37,10 @@ defmodule SocketioEmitter.Mixfile do
   end
 
   defp deps do
-    [ 
+    [
       {:ex_doc, ">= 0.0.0", only: :dev},
-      {:redix, "~> 0.6.1"},
-      {:msgpax, "~> 2.0"}
+      {:redix, "~> 1.1"},
+      {:msgpax, "~> 2.3"}
     ]
   end
 end

@@ -5,6 +5,8 @@ matrix:
   include:
     - otp_release: 19.2
       elixir: 1.4.0
+    - otp_release: 24
+      elixir: 1.13.1
 
 services:
   - redis-server
