@@ -4,7 +4,7 @@ defmodule SocketioEmitter.Mixfile do
   def project do
     [
       app: :socketio_emitter,
-      version: "0.1.2",
+      version: "0.2.0",
       elixir: "~> 1.13.1",
       description: description(),
       package: package(),
