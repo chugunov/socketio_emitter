@@ -10,7 +10,7 @@ jobs:
   build:
 
     name: Build and test OTP ${{matrix.otp-version}} / Elixir ${{matrix.elixir-version}}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-${{ matrix.ubuntu-version }}
     
     services:
       redis:
@@ -28,8 +28,10 @@ jobs:
         include:
           - otp-version: '19.2'
             elixir-version: '1.4.0'
+            ubuntu-version: '18.04'
           - otp-version: '24'
             elixir-version: '1.13.1'
+            ubuntu-version: latest 
     
     steps:
     - uses: actions/checkout@v2
