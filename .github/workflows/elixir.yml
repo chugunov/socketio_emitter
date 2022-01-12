@@ -10,7 +10,7 @@ jobs:
   build:
 
     name: Build and test OTP ${{matrix.otp-version}} / Elixir ${{matrix.elixir-version}}
-    runs-on: ubuntu-${{ matrix.ubuntu-version }}
+    runs-on: ${{ matrix.os }}
     
     services:
       redis:
@@ -26,9 +26,9 @@ jobs:
     strategy:
       matrix:
         include:
-          - otp-version: '24'
+          - otp-version: '24.2'
             elixir-version: '1.13.1'
-            ubuntu-version: latest 
+            os: ubuntu-latest 
     
     steps:
     - uses: actions/checkout@v2
@@ -37,7 +37,6 @@ jobs:
       with:
         elixir-version: ${{ matrix.elixir-version }}
         otp-version: ${{ matrix.otp-version }}
-        version-type: strict
     - name: Restore dependencies cache
       uses: actions/cache@v2
       with:
