@@ -28,10 +28,8 @@ jobs:
         include:
           - otp-version: '19.2'
             elixir-version: '1.4.0'
-            version-type: 'strict'
           - otp-version: '24'
             elixir-version: '1.13.1'
-            version-type: 'strict'
     
     steps:
     - uses: actions/checkout@v2
@@ -40,6 +38,7 @@ jobs:
       with:
         elixir-version: ${{ matrix.elixir-version }}
         otp-version: ${{ matrix.otp-version }}
+        version-type: strict
     - name: Restore dependencies cache
       uses: actions/cache@v2
       with:
