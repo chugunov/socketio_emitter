@@ -26,9 +26,6 @@ jobs:
     strategy:
       matrix:
         include:
-          - otp-version: '19.2'
-            elixir-version: '1.4.0'
-            ubuntu-version: '18.04'
           - otp-version: '24'
             elixir-version: '1.13.1'
             ubuntu-version: latest 
